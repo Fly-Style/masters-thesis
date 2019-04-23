@@ -1,0 +1,55 @@
+% !TEX root = compiler.tex
+\documentclass[14pt]{template/vakthesis}
+\usepackage{template/local}
+\usepackage[master]{template/title}
+\usepackage{geometry}
+
+\geometry{left=2cm,right=1cm,top=2cm,bottom=2cm}
+
+\begin{document}
+
+\title{Bulk memory operations implementation in WebAssembly}
+
+\author{Oleksandr R. Syrotenko}
+       {2nd year masters student}
+
+\supervisor{Ievgen O. Demkivskiy}
+           {PhD in Engineering, Assistant Professor}
+
+\institution{Taras Shevchenko National University of Kyiv\\
+Faculty of Computer Science and Cybernetics\\
+Department of Information Systems}{Kyiv}
+
+\accepted{Department of Information Systems}{9}{10 June 2019}
+{Head of the Department Professor O.I. Provotar}
+
+\date{2019}
+
+\maketitle
+
+\tableofcontents
+
+\input{intro}
+
+% \input{abstract}
+
+\input{1}
+
+\input{2}
+
+\input{3}
+
+\input{4}
+
+\input{resume}
+
+\bibliographystyle{template/IEEEtran}
+\bibliography{compiler}
+
+\appendix
+\input{app-1}
+
+\appendix
+\input{app-2}
+
+\end{document}

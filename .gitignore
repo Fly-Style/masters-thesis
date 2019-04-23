@@ -1,0 +1,9 @@
+*.out
+*.pdf
+*.aux
+*.dvi
+*.log
+*.blg
+*.bbl
+*.tex-e
+*.toc

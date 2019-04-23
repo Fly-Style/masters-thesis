@@ -1,0 +1,98 @@
+\ProvidesPackage{thesis-title}
+\newif\if@coursework
+\@courseworkfalse
+\def \@metatitle {Bachelor thesis}
+\DeclareOption{master}{ \def \@metatitle {thesis} }
+\DeclareOption{bachelor}{ \def \@metatitle {Bachelor thesis} }
+\DeclareOption{specialist}{ \def \@metatitle {Дипломна робота спеціаліста} }
+\DeclareOption{course}{ \@courseworktrue \def \@metatitle {Coursework}}
+\ProcessOptions
+
+\usepackage{textcase}
+
+\def \author #1#2{
+  \def\@author{#1}
+  \def\@author@status{#2}
+}
+\author{}{}
+
+\def\institution #1#2{%
+  \def\@institution{#1}%
+  \def\@town{#2}
+}
+\institution{}{}
+
+\def\date#1{\def\@year{#1}}
+\date{}
+
+\def \supervisor #1#2{
+  \def\@supervisor{#1}
+  \def\@supervisor@status{#2}
+}
+\supervisor{}{}
+
+\def \accepted #1#2#3#4{
+  \def\@accepted@department{#1}
+  \def\@accepted@protocol{#2}
+  \def\@accepted@date{#3}
+  \def\@accepted@signature{#4}
+}
+\accepted{}{}{}{}
+
+\renewenvironment{titlepage}
+    {\newpage
+     \pagestyle{empty}%
+     \setcounter{page}{1}%
+     \begin{center}}%
+    {\end{center}%
+     \newpage}
+
+\def\maketitle{\begin{titlepage}%
+  \let\footnotesize\small
+  \let\footnoterule\relax
+  \let \footnote \thanks
+  \@maketitle
+  \end{titlepage}%
+  \setcounter{footnote}{0}%
+  \global\let\thanks\relax
+  \global\let\maketitle\relax
+  \global\let\@thanks\@empty
+  \global\let\@author\@empty
+  \global\let\@author@status\@empty
+  \global\let\@supervisor\@empty
+  \global\let\@supervisor@status\@empty
+  \global\let\@date\@empty
+  \global\let\@title\@empty
+  \global\let\title\relax
+  \global\let\author\relax
+  \global\let\date\relax
+  \global\let\and\relax
+}
+\def\@maketitle{%
+  {\scshape
+   \@ifundefined{@institution@office}{\relax}{\@institution@office\par}
+   \@institution\par}
+  \vspace{\stretch{4}}%
+  {\MakeTextUppercase{\bf \@metatitle} \par}
+  {\large\bfseries\scshape \@title \par}%
+  {\bf Submitted as Fulfilment of the Requirements for \\the Degree of M.Sc. in Software Engineering \par}
+  \vspace{\stretch{3}}%
+  { \raggedright Author: \@author@status \\ \@author \ \hspace{10.0cm} \underline{\hspace{1.5in}}\ \par}%
+  \vspace{\stretch{1}}%
+  {\raggedright
+     Academic Supervisor: \\ \@supervisor@status \\ \@supervisor \ \hspace{9.4cm} \underline{\hspace{1.5in}}\ \par}%
+
+  \vspace{\stretch{3}}%
+  {\raggedleft I certify that this thesis does not contain any borrowings from the works of other authors without corresponding references.  Author\quad\underline{\hspace{4.0cm}}\par}
+
+  \vspace{\stretch{3}}%
+  \ifx\@accepted@signature\@empty
+
+  \vspace{\stretch{3}}%
+  \else
+    {\raggedleft The thesis was considered and reccomended for defence on the session of \@accepted@department, protocol No. {\@accepted@protocol} from \@accepted@date. \@accepted@signature \quad \underline{\hspace{4.0cm}}
+      \par
+    }
+  \fi
+  \vspace{\stretch{3}}%
+  \@town\ --- \@year}
