@@ -4,16 +4,72 @@
 \subsection{}
 \subsection{}
 
-\section{Technology Overview}
+\section{WebAssembly Overview}
 \subsection{}
 \subsection{}
 
-\section{WebAssembly Spectification}
+\section{WebAssembly Specification}
 \subsection{}
 \subsection{}
 
-\section{Overview and Comparison of Rivals}
-\subsection{Java Applets}
-\subsection{Adobe Flash}
-\subsection{Microsoft Silverlight}
+\section{Overview of Rivals}
+\subsection{Java Applets} \mbox{}\\
+\indent A Java applet is a small application is written in the Java language, or another programming language that compiles to Java bytecode (JVM intermediate representation), and delivered to users in the form of Java bytecode. 
+The browser user launched the Java applet from a web page, and the applet was then executed within JVM were launched in separate process from the web browser itself. 
+Programmers could appear a Java applets in any frame of the web page, a new application window, Sun's AppletViewer, or an another stand-alone tool.
+
+Java applets had access to hardware acceleration, making them well-suited for non-trivial, computation-intensive visualizations. When applets were popular, JavaScript engines didn't have GPU support.
+As browsers have gained support for hardware-accelerated graphics thanks to the canvas technology (or specifically WebGL in the case of 3D graphics), 
+as well as just-in-time compiled JavaScript became very efficient, the speed difference has become less noticeable.
+
+The applet can be displayed on the web page by making use of the deprecated applet HTML element, or the recommended object element.
+The embed element can be used with Mozilla family browsers (embed was deprecated in HTML 4 but is included in HTML 5). 
+This specifies the applet's source and location. 
+Both object and embed tags can also download and install Java virtual machine (if required) or at least lead to the plugin page. 
+\texttt{applet} and \texttt{{object}} tags also support loading of the serialized applets that start in some particular (rather than initial) state. 
+Tags also specify the message that shows up in place of the applet if the browser cannot run it due to any reason \cite{Wiki_Applet}.
+
+Java applets were deprecated since JDK 9 in 2017 and removed from JDK 11, released in September 2018.
+
+\textit{\textbf{By definition, Java bytecode is platform independent intermediate representation, Java applets can be executed by browsers (or other clients) for many platforms, including Microsoft Windows, FreeBSD, Unix, macOS and Linux.}}
+\textit{\textbf{They cannot be run on modern mobile devices, which do not support Java.}}
+
+\subsection{Microsoft Silverlight} \cite{Wiki_Silver}
+
+Microsoft Silverlight (or simply Silverlight) was an application framework for writing and running rich Internet applications, similar to Adobe Flash. 
+A plugin for Silverlight is still available for some browsers. 
+While early versions of Silverlight focused on streaming media, later versions supported multimedia, graphics, and animation and gave developers support for CLI languages and development tools.
+
+Silverlight provides a retained mode graphics system similar to Windows Presentation Foundation (WPF), and integrates multimedia, graphics, animations, and interactivity into a single run-time environment. 
+In Silverlight applications, user interfaces are declared in Extensible Application Markup Language (XAML) and programmed using a subset of the .NET Framework. 
+XAML can be used for marking up the vector graphics and animations.
+
+Silverlight supports H.264 video, Advanced Audio Coding, Windows Media Video (WMV), Windows Media Audio (WMA), and MPEG Layer III (MP3) 
+media content across all supported browsers without requiring Windows Media Player, the Windows Media Player ActiveX control, or Windows Media browser plug-ins. 
+Silverlight exposes a Downloader object which can be used to download content, like scripts, media assets, or other data, as may be required by the application.
+With version II, the programming logic can be written in any .NET language, including some derivatives of common dynamic programming languages like \textbf{IronRuby} and \textbf{IronPython}.
+
+Cross platform Mozilla Firefox support for Silverlight was removed in Firefox 52 released in March 2017 when Mozilla removed support for NPAPI plugins,[40] bringing it in-line with the removal of NPAPI plugin support in Google Chrome.
+
+\subsection{Adobe Flash} \cite{Wiki_Flash}
+
+Adobe Flash Player is computer software for using content created on the Adobe Flash platform, including viewing multimedia contents, executing rich Internet applications, and streaming audio and video. 
+Flash Player can run from a web browser as a browser plug-in or on supported mobile devices. 
+Flash Player was created by Macromedia and has been developed and distributed by Adobe Systems since Adobe acquired Macromedia in 2005. 
+
+Flash Player runs \textbf{SWF} files that can be created by Adobe Flash Professional, Adobe Flash Builder or by third party tools such as FlashDevelop. 
+Flash Player supports vector graphics, 3D graphics, embedded audio, video and raster graphics, and a scripting language called \textbf{ActionScript}. 
+ActionScript is based on ECMAScript (similar to JavaScript) and supports object-oriented code. 
+Flash Player is distributed free of charge and its plug-in versions are available for every major web browser and operating system. 
+Google Chrome, Internet Explorer 11 in Windows 8 and later, and Microsoft Edge come bundled with a sandboxed Adobe Flash plug-in.
+
+Flash Player once had a large user base, and was a common format for web games, animations, and graphical user interface (GUI) elements embedded in web pages. 
+Adobe stated in 2013 that more than 400 million out of over 1 billion connected desktops update to the new version of Flash Player within six weeks of release. 
+
+Flash Player has become increasingly criticized for its performance, consumption of battery on mobile devices, the number of security vulnerabilities that had been discovered in the software, and its closed platform nature.
+
+In July 2017, Adobe announced that it would end support for Flash Player in 2020, and continued to encourage the use of open HTML5 standards in place of Flash. 
+The announcement was coordinated with all tech giantes.
+Its usage has also waned because of modern web standards that allow some of Flash's use cases to be fulfilled without third-party plugins.
+
 \subsection{Asm.js}

@@ -1,4 +1,4 @@
-document = thesis.tex
+document = compiler.tex
 
 build:
 	latex "$(document)"
