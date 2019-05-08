@@ -1,5 +1,61 @@
 \chapter*{Introduction}
 
-
 There are near 4 billion Internet users in the world today. The very big part of them are using browsers for surfing the Internet.
-It makes browsers the most popular software application in the world (except operating systems). 
+It makes browsers the most popular software application in the world (except operating systems) and it means that overall time of code execution and web-page loading should be minimized. There is an investigation of 'USA Today' which shows that :
+
+\begin{itemize}
+ \item Amazon could lose 1.6 billion dollars per year if their web-page delay increase by 1 second;
+ \item Slowing Google's search result by 4/10's of second would reduce number of searches by 8 million in a day;
+ \item One of four web-site visitors would abandon this page if it takes more than a second to load it;
+ \item One of five web-site visitors become rude to web-service because they 'serving them too slowly';
+\end{itemize}
+
+All these facts mean one thing - it’s profitable both for browser manufacturers(which are the biggest serivces providers) and for developers community to invest in developing and improving the productivity of websites and web applications.
+
+WebAssembly is of the major result of mutual research and design of performant Web tools. WebAssembly was  was first announced 17th of June 2015, and the first demonstration was executing Angry Bots in three major browsers.
+The precursor technologies were asm.js from Mozilla and Google Native Client (PNaCl) and the initial implementation was based on the feature set of \texttt{asm.js}. \cite{Wiki_Wasm}
+
+WebAssembly (often shortened to Wasm) is a standard that defines a portable binary format and a corresponding assembly-like text format for executables. The main goal of the format is to enable high performance applications on web pages, but it is designed to be executed and integrated in other environments as well. \cite{Wiki_Wasm}
+
+\section{Original memory management in WebAssembly}
+
+Sometimes software engineers want to copy or initialize big chunk of linear memory.
+For this reason they are using \texttt{memset/memcpy} in C/C++ or \texttt{System.arraycopy()} in Java. 
+\begin{verbatim}
+#include <string.h>
+
+size_t length = 1024;           // 2^10 for test purposes
+int *array1 = (int*) malloc(length * sizeof(array1));
+// some usage of this mempory here
+int *array2 = (int*) malloc(length * sizeof(array2));
+memcpy(array2, array1, length); // copy data from array1 to array2
+memset(array1, 0, len);         // filling all array1 memory by zeroes 
+return array1[0] + array2[0];   // avoid dead code elimination.
+\end{verbatim}
+
+Right now it compiles by \texttt{emscripten} tool to such piece of code :
+
+\begin{verbatim}
+(module
+ (type $FUNCSIG$ii (func (param i32) (result i32)))
+ (type $FUNCSIG$iiii (func (param i32 i32 i32) (result i32)))
+ (import "env" "_Znaj" (func $_Znaj (param i32) (result i32)))
+ (import "env" "memset" (func $memset (param i32 i32 i32) (result i32)))
+ (table 0 anyfunc)
+ (memory $0 1)
+ (export "memory" (memory $0))
+ (export "_Z12testFunctionPi" (func $_Z12testFunctionPi))
+ (func $_Z12testFunctionPi (; 2 ;) (param $0 i32) (result i32)
+  (i32.load
+   (call $memset
+    (call $_Znaj
+     (i32.const 4096)
+    )
+    (i32.const 10)
+    (i32.const 1024)
+   )))
+)
+\end{verbatim}
+
+
+\section{Summary of Major Contributions}

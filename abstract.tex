@@ -1,0 +1,7 @@
+\chapter*{Abstract}
+ 
+Bulk memory operations is a common memory calculation optimization technique that takes some memory pointer and make massive store to this memory. A lot of programs have intensive computations that use bulk operations like \texttt{memcpy} or \texttt{memmove} to improve copying or storing big chunks of memory. There are a lot of places where programmer can improve memory consumption and computation complexity of them application by increasing througput via bulk operations usage.
+
+This thesis identifies bulk memory operations concept and implementation in WebAssembly virtual machine. It also presents approaches of optimtization connected with bulk operations : conditional segment initialization and passive segment initialiation. Bulk operations have their own intrinsics and any programmer will have a possibility to use them in their code. Additionally, any language-to-WebAssembly compiler can map its internal lanuguage bulk operations to a new WebAssembly bulk memory operations.   
+
+All of the algorithms have been implemented in the Microsoft ChakraCore engine and tested on a MacBook Pro 2015 with Retina equipped with a x86-64 processor (Haswell) using internal ChakraCore test suite, custom tests and benchmarks.  
