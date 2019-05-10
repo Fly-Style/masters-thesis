@@ -17,45 +17,70 @@ The precursor technologies were asm.js from Mozilla and Google Native Client (PN
 
 WebAssembly (often shortened to Wasm) is a standard that defines a portable binary format and a corresponding assembly-like text format for executables. The main goal of the format is to enable high performance applications on web pages, but it is designed to be executed and integrated in other environments as well. \cite{Wiki_Wasm}
 
-\section{Original memory management in WebAssembly}
+\Large \textbf{Original memory management in WebAssembly}
 
-Sometimes software engineers want to copy or initialize big chunk of linear memory.
-For this reason they are using \texttt{memset/memcpy} in C/C++ or \texttt{System.arraycopy()} in Java. 
+\normalsize Sometimes software engineers want to copy or initialize big chunk of linear memory.
+
+For this reason they are using \texttt{memset/memcpy} in C/C++ or \texttt{System.arraycopy()} in Java, generally called as \textbf{bulk memory operations}. 
+
 \begin{verbatim}
 #include <string.h>
-
-size_t length = 1024;           // 2^10 for test purposes
-int *array1 = (int*) malloc(length * sizeof(array1));
-// some usage of this mempory here
-int *array2 = (int*) malloc(length * sizeof(array2));
-memcpy(array2, array1, length); // copy data from array1 to array2
-memset(array1, 0, len);         // filling all array1 memory by zeroes 
-return array1[0] + array2[0];   // avoid dead code elimination.
+int testFunction() {
+  size_t length = 1024;           // 2^10 for test purposes 
+  int *array1 = (int*) malloc(length * sizeof(array1));
+  // ... some usage of this mempory here
+  int *array2 = (int*) malloc(length * sizeof(array2));
+  
+  for(int i = 0; i < length; ++i)
+    array1[i]++;                  // avoid constant propagation. 
+  memcpy(array2, array1, length); // copy data from array1 to array2 
+  memset(array1, 0, len);         // filling all array1 memory by zeroes 
+  return array1[0] + array2[0];   // avoid dead code elimination.
+}
 \end{verbatim}
 
-Right now it compiles by \texttt{emscripten} tool to such piece of code :
-
+Compilation result of this fucntion by \texttt{emscripten} tool to such piece of code (full code is available in Appendix A) :
+\small
 \begin{verbatim}
 (module
- (type $FUNCSIG$ii (func (param i32) (result i32)))
- (type $FUNCSIG$iiii (func (param i32 i32 i32) (result i32)))
- (import "env" "_Znaj" (func $_Znaj (param i32) (result i32)))
  (import "env" "memset" (func $memset (param i32 i32 i32) (result i32)))
+ (import "env" "memcpy" (func $memcpy (param i32 i32 i32) (result i32)))
  (table 0 anyfunc)
- (memory $0 1)
  (export "memory" (memory $0))
  (export "_Z12testFunctionPi" (func $_Z12testFunctionPi))
- (func $_Z12testFunctionPi (; 2 ;) (param $0 i32) (result i32)
-  (i32.load
-   (call $memset
+
+ // compiled testFunction.
+ (func $_Z12testFunctionPi (; 3 ;) (param $0 i32) (result i32)
+  (local $1 i32)  (local $2 i32) (local $3 i32) (local $4 i32)
+  (set_local $1
+   (call $memset          // <- memset call
     (call $_Znaj
      (i32.const 4096)
     )
     (i32.const 10)
     (i32.const 1024)
-   )))
+   )
+  )
+  // ... a lot of generated code with folded constants.
+  (i32.load
+   (call $memcpy          // <- memcpy call
+    (get_local $2)
+    (get_local $1)
+    (i32.const 1024)
+   )
+  )
+ ))
 )
 \end{verbatim}
+\normalsize
+Compiled code contains \texttt{memcpy} and \texttt{memset} functions.
+They were imported from \texttt{env} module which \textbf{\textit{is linked}} with standart \texttt{libc} library, where those functions are defined and implemented.
+It would be better to use internal WebAssembly bulk operations instead of using \texttt{libc}'s memory operations. 
 
+This is a key idea of further investigations : desiging and implementation of bulk memory operations intrinsics, which would be placed to a special \texttt{memory} module.
 
-\section{Summary of Major Contributions}
+\Large \textbf{Summary of Major Contributions}
+\normalsize
+
+\textbf{TO BE DEFINED LATER}
+
