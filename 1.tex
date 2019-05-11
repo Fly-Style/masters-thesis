@@ -30,7 +30,7 @@ WebAssembly is an open standard developed by a W3C Community Group.
 
 \begin{itemize} 
   \item \textbf{Fast}: executes with near native code performance, taking advantage of capabilities common to all contemporary hardware.
-  \item \textbf{Safe}: code is validated and executes in a memory-safe [2], sandboxed environment preventing data corruption or security breaches.
+  \item \textbf{Safe}: code is validated and executes in a memory-safe, sandboxed environment preventing data corruption or security breaches.
   \item \textbf{Well-defined}: fully and precisely defines valid programs and their behavior in a way that is easy to reason about informally and formally.
   \item \textbf{Hardware-independent}: can be compiled on all modern architectures, desktop or mobile devices and embedded systems alike.
   \item \textbf{Language-independent}: does not privilege any particular language, programming model, or object model.
@@ -52,24 +52,58 @@ WebAssembly encodes a low-level, assembly-like programming language.
 This language is structured around the following concepts:
 
 \begin{itemize} 
+  
   \item \textbf{Values}:
-  WebAssembly provides only four basic value types. These are integers and IEEE 754-2008 numbers, each in 32 and 64 bit width. 32 bit integers also serve as Booleans and as memory addresses. The usual operations on these types are available, including the full matrix of conversions between them. There is no distinction between signed and unsigned integer types. Instead, integers are interpreted by respective operations as either unsigned or signed in two’s complement representation.
+  WebAssembly provides only four basic value types. 
+  These are integers and IEEE 754-2008 numbers, each in 32 and 64 bit width. 32 bit integers also serve as Booleans and as memory addresses. The usual operations on these types are available, including the full matrix of conversions between them. There is no distinction between signed and unsigned integer types. Instead, integers are interpreted by respective operations as either unsigned or signed in two’s complement representation.
+  
   \item \textbf{Instructions}:
-  the computational model of WebAssembly is based on a stack machine. Code consists of sequences of instructions that are executed in order. Instructions manipulate values on an implicit operand stack * and fall into two main categories. Simple instructions perform basic operations on data. They pop arguments from the operand stack and push results back to it. Control instructions alter control flow. Control flow is structured, meaning it is expressed with well-nested constructs such as blocks, loops, and conditionals. Branches can only target such constructs.
+  the computational model of WebAssembly is based on a stack machine. 
+  Code consists of sequences of instructions that are executed in order. 
+  Instructions manipulate values on an implicit operand stack * and fall into two main categories. 
+  Simple instructions perform basic operations on data. They pop arguments from the operand stack and push results back to it. 
+  Control instructions alter control flow. 
+  Control flow is structured, meaning it is expressed with well-nested constructs such as blocks, loops, and conditionals. 
+  Branches can only target such constructs.
+  
   \item \textbf{Traps}:
-  under some conditions, certain instructions may produce a trap, which immediately aborts execution. Traps cannot be handled by WebAssembly code, but are reported to the outside environment, where they typically can be caught.
+  under some conditions, certain instructions may produce a trap, which immediately aborts execution. 
+  Traps cannot be handled by WebAssembly code, but are reported to the outside environment, where they typically can be caught.
+  
   \item \textbf{Functions}:
-  code is organized into separate functions. Each function takes a sequence of values as parameters and returns a sequence of values as results. ** Functions can call each other, including recursively, resulting in an implicit call stack that cannot be accessed directly. Functions may also declare mutable local variables that are usable as virtual registers.
+  code is organized into separate functions. 
+  Each function takes a sequence of values as parameters and returns a sequence of values as results.** 
+  Functions can call each other, including recursively, resulting in an implicit call stack that cannot be accessed directly. 
+  Functions may also declare mutable local variables that are usable as virtual registers.
+  
   \item \textbf{Tables}:
-  a table is an array of opaque values of a particular element type. It allows programs to select such values indirectly through a dynamic index operand. Currently, the only available element type is an untyped function reference. Thereby, a program can call functions indirectly through a dynamic index into a table. For example, this allows emulating function pointers by way of table indices.
+  a table is an array of opaque values of a particular element type. 
+  It allows programs to select such values indirectly through a dynamic index operand. 
+  Currently, the only available element type is an untyped function reference. 
+  Thereby, a program can call functions indirectly through a dynamic index into a table. 
+  For example, this allows emulating function pointers by way of table indices.
+  
   \item \textbf{Linear Memory}:
-  a linear memory is a contiguous, mutable array of raw bytes. Such a memory is created with an initial size but can be grown dynamically. A program can load and store values from/to a linear memory at any byte address (including unaligned). Integer loads and stores can specify a storage size which is smaller than the size of the respective value type. A trap occurs if an access is not within the bounds of the current memory size.
+  a linear memory is a contiguous, mutable array of raw bytes. 
+  Such a memory is created with an initial size but can be grown dynamically. 
+  A program can load and store values from/to a linear memory at any byte address (including unaligned). 
+  Integer loads and stores can specify a storage size which is smaller than the size of the respective value type. 
+  A trap occurs if an access is not within the bounds of the current memory size.
+  
   \item \textbf{Modules}:
-  a WebAssembly binary takes the form of a module that contains definitions for functions, tables, and linear memories, as well as mutable or immutable global variables. Definitions can also be imported, specifying a module/name pair and a suitable type. Each definition can optionally be exported under one or more names. In addition to definitions, modules can define initialization data for their memories or tables that takes the form of segments copied to given offsets. They can also define a start function that is automatically executed.
+  a WebAssembly binary takes the form of a module that contains definitions for functions, tables, and linear memories, as well as mutable or immutable global variables. 
+  Definitions can also be imported, specifying a module/name pair and a suitable type. 
+  Each definition can optionally be exported under one or more names. 
+  In addition to definitions, modules can define initialization data for their memories or tables that takes the form of segments copied to given offsets. 
+  They can also define a start function that is automatically executed.
+  
   \item \textbf{Embedder}:
-  a WebAssembly implementation will typically be embedded into a host environment. This environment defines how loading of modules is initiated, how imports are provided (including host-side definitions), and how exports can be accessed. However, the details of any particular embedding are beyond the scope of this specification, and will instead be provided by complementary, environment-specific API definitions.
+  a WebAssembly implementation will typically be embedded into a host environment. 
+  This environment defines how loading of modules is initiated, how imports are provided (including host-side definitions), and how exports can be accessed. 
+  However, the details of any particular embedding are beyond the scope of this specification, and will instead be provided by complementary, environment-specific API definitions.
   
   *	 In practice, implementations need not maintain an actual operand stack. Instead, the stack can be viewed as a set of anonymous registers that are implicitly referenced by instructions. The type system ensures that the stack height, and thus any referenced register, is always known statically.
+  
   ** In the current version of WebAssembly, there may be at most one result value.
 \end{itemize}
 
@@ -78,19 +112,49 @@ This language is structured around the following concepts:
 \indent Conceptually, the semantics of WebAssembly is divided into three phases. For each part of the language, the specification specifies each of them.
 
 % \begin{itemize}
-\textbf{Decoding}. WebAssembly modules are distributed in a binary format. Decoding processes that format and converts it into an internal representation of a module. In this specification, this representation is modelled by abstract syntax, but a real implementation could compile directly to machine code instead.
+\textbf{Decoding}. WebAssembly modules are distributed in a binary format. 
+                   Decoding processes that format and converts it into an internal representation of a module. 
+                   In this specification, this representation is modelled by abstract syntax, but a real implementation could compile directly to machine code instead.
   
-\textbf{Validation}. A decoded module has to be valid. Validation checks a number of well-formedness conditions to guarantee that the module is meaningful and safe. In particular, it performs type checking of functions and the instruction sequences in their bodies, ensuring for example that the operand stack is used consistently.
+\textbf{Validation}. A decoded module has to be valid. 
+                     Validation checks a number of well-formedness conditions to guarantee that the module is meaningful and safe. In particular, it performs type checking of functions and the instruction sequences in their bodies, ensuring for example that the operand stack is used consistently.
 
 \textbf{Execution}. Finally, a valid module can be executed. Execution can be further divided into two phases:
 
-\textbf{Instantiation}. A module instance is the dynamic representation of a module, complete with its own state and execution stack. Instantiation executes the module body itself, given definitions for all its imports. It initializes globals, memories and tables and invokes the module’s start function if defined. It returns the instances of the module’s exports.
-
-\textbf{Invocation}. Once instantiated, further WebAssembly computations can be initiated by invoking an exported function on a module instance. Given the required arguments, that executes the respective function and returns its results.
+\textbf{Instantiation}. A module instance is the dynamic representation of a module, complete with its own state and execution stack. 
+                        Instantiation executes the module body itself, given definitions for all its imports. 
+                        It initializes globals, memories and tables and invokes the module’s start function if defined. 
+                        It returns the instances of the module’s exports.
+\textbf{Invocation}. Once instantiated, further WebAssembly computations can be initiated by invoking an exported function on a module instance. 
+                     Given the required arguments, that executes the respective function and returns its results.
 
 Instantiation and invocation are operations within the embedding environment.
 % \end{itemize}
 
+\subsection{Enhancement process}
+WebAssembly community has big growth and they actively help to improve this technology.
+There are two divided community groups : \cite{wasm_wg} \cite{wasm_cg}
+\begin{itemize}
+  \item \textbf{Working Group.}  The scope of the WebAssembly Working Group comprises addressing the need for native-performance code on the Web in applications ranging from 3D games to speech recognition to codecs—and in any other contexts in which a common mechanism for enabling high-performance code is relevant—by providing a standardized portable, size-, and load-time-efficient format and execution environment that attempts to maximize performance and interoperate gracefully with JavaScript and the Web, while ensuring security and consistent behavior across a variety of implementations.
+  
+  \item \textbf{Community Group.} The mission of Community Group is to provide a forum for pre-standardization collaboration on the WebAssembly format.
+        The Community Group is explicitly not intended to standardize the final ratified text of standards related to WebAssembly. 
+        Instead it will prepare recommendations to a separate WebAssembly Working Group.
+\end{itemize}
+
+There are a lot of community proposals inside the WebAssembly enhancement process. Let's count the most important proposals :
+\begin{itemize}
+\item \textbf{Reference types}. WebAssembly still doesn't include reference types. The key idea of this proposal is to support
+      \texttt{nullref} and give a possibility to manipulate a tables inside WebAssembly memory.
+\item \textbf{Garbage collection}. WebAssembly doesn't have automatic memory management system, which can be build after implementation of reference types. It gives a possibility to count references or trace whole 'heap', staring from the current rootset. 
+\item \textbf{Bulk memory operations}. 
+\item \textbf{Atomics and SIMD operations}. There are a lot of processors which have special registers for vectors computation
+  (or SIMD - single instruction, multiply data). All the most popular architectures have SIMD extensions.
+   For example, Intel has AVX and SSE registers with 128 to 512 bytes capacity.
+   Arm has NEON, PowerPC have AltiVEC and SPE, MIPS have MaDMaX technologies for SIMD operations.
+   Of course, it is a great challenge to support SIMD operations both for compilers and for runtime, because it can improve the performanc of some complex computations in a times.
+\end{itemize}
+  
 \section{Overview of Rivals}
 \subsection{Java Applets} \mbox{}\\
 \indent A Java applet is a small application is written in the Java language, or another programming language that compiles to Java bytecode (JVM intermediate representation), and delivered to users in the form of Java bytecode. 
