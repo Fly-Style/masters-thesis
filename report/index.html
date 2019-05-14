@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Shower Presentation Engine</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="shower/themes/ribbon/styles/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <style>
+        .shower {
+            --slide-ratio: calc(4 / 3);
+        }
+        .slide {
+            background : #fff3e5;
+	    font-size: 1.2em;
+        }
+        .slide code {
+            font-family: "Fira Code", monospace
+        }
+        .slide blockquote {
+            font-size: 2rem;
+        }
+        #telegram {
+            font-family: "Fira Code", "Retina", monospace
+        }
+        #announcement {
+            font-size: 5rem;
+        }
+    </style>
+</head>
+<body class="shower list">   
+    <header class="caption">
+        <h1>Shower Presentation Engine</h1>
+    </header>
+    
+    <section class="slide" id="cover">
+        <h2>Bulk Memory Operations</h2>
+        <h2>Implementation in</h2>
+	<h2>WebAssembly</h2>
+        <br>
+	<br>
+        <p>Роботу виконав : Сиротенко Олександр Романович</p>
+	<p>Науковий керівник : кандидат технiчних наук Демківський Є.О.</p>
+        <!--<figure>
+            <img class="cover" src="pictures/cover_.jpg" alt="Hands on the orange typewriter in a park">
+        </figure>
+	-->
+        <style>
+
+            #cover h2 {
+                margin: 30px 0 0;
+                text-align: center;
+                font-size: 72px;
+            }
+	    
+            #cover p {
+                margin: 10px 0 0;
+                text-align: center;
+                /* color: white; */
+                font-style: italic;
+                font-size: 28px;
+            }
+
+            #cover p a {
+                color: white;
+            }
+        </style>
+    </section>
+
+    <!-- ABSTRACT MACHINE -->
+    <section class="slide">
+        <figure>
+            <h2>Мета роботи</h2>
+            <br>
+	    <p style="font-size: 2.25rem; text-align:center;">Дизайн та розробка підтримки так званих "масивних" операцій над пам'яттю у WebAssembly.</p>
+        </figure>
+    </section>
+
+    <section class="slide">
+        <figure>
+            <h2>Проблематика</h2>
+            <br>
+	    <ul>
+	      <li style="font-size: 2.25rem;">Продуктивність сучасних веб-застосунків.</li>
+	      <br>
+	      <li style="font-size: 2.25rem;">Відносно мала швидкість обробки великих даних.</li>
+	      <br>
+	      <li style="font-size: 2.25rem;">Велика кількість атомарних викликів запису.</li>
+	      <br>
+	      <li style="font-size: 2.25rem;">Запис у пам'ять набагато дорожчий, ніж читання.</li>
+	    </ul>
+        </figure>
+    </section>
+    
+    <!-- ABSTRACT -->
+    <section class="slide" id="chapter">
+       <h2 class="shout shrink">WebAssembly</h2>
+    </section>
+
+    <!-- ABSTRACT MACHINE -->
+    <section class="slide">
+        <figure>
+            <br>
+            <br>
+            <br>
+            <blockquote>
+              <p>WebAssembly — це бінарний формат інструкцій для стекової віртуальної машини.</p>
+            </blockquote>
+        </figure>
+    </section>
+    
+    <!-- ABSTRACT MACHINE SPECIFICATIONS -->
+    <section class="slide">
+        <h2>Докладніше</h2>
+        <br>
+        <ul>
+          <li>Спроектований як переносиме AS-дерево.</li>
+	  <br>
+          <li>Має два проміжні представлення. </li>
+	  <br>
+          <li>Декларується <b>швидке</b> та <b>безпечне</b> виконання коду.</li>
+	  <br>
+          <li>Кросплатформенний та відкритий <a href="https://www.w3.org/TR/wasm-core-1/">стандарт</a>. [1]</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Масивні операції над пам'яттю </h2>
+	<h3>Лінійний та швидкий запис великої кількості байт.</h3>
+	<br>
+	<code> memset (*ptr, int value, size_t num); </code>
+	<br>
+	<br>
+	<code> memcpy (*dest, const *src, size_t num);</code>
+    </section>
+
+    <section class="slide">
+        <h2>... у WebAssembly</h2>
+        <br>
+	<br>
+        <ul>
+            <li>Специфікація WebAssembly <b><i>поки що</i></b> не визначає наявність масивних операцій.</li> 
+	    <li>Iснує офіційна
+	      <a href="https://github.com/WebAssembly/bulk-memory-operations/blob/master/proposals/bulk-memory-operations/Overview.md"> пропозиція</a>
+	      додати такі операції у стандарт. [2]</li>
+	    <li>Автор роботи є одним із розробників цієї пропозиції 😊</li>
+	    <li>Цільова віртуальна машина - <b>ChakraCore</b> від компанії Microsoft. </li>
+	</ul>
+    </section>
+
+    <section class="slide">
+      <h2>Очікуваний результат</h2>
+      <br>
+        <ul>
+          <li>Підтримка швидких операцій над лінійною пам'яттю :
+	    <br>
+	    <code>memory.copy</code> , 
+	    <code>memory.fill</code> , 
+	    <code>memory.init</code>
+	  </li>
+	  <br>
+	   <li>Підтримка швидких операцій над таблицею вказівників : 
+	    <br>
+	    <code>table.copy</code> ,
+	    <code>table.init</code>
+	   </li>
+	   <br>
+	   <li>Пасивної преініціалізації сегментів пам'яті.</li>
+	</ul>
+    </section>
+
+    <section class="slide" id="chapter">
+      <h2 class="shout shrink">Деталі реалізації</h2>
+    </section>
+
+      <section class="slide">
+        <h2>Загальне</h2>
+        <br>
+	<br>
+        <ul>
+          <li>Включити ключові слова в лексер, токени в парсер ☑️</li>
+	  <li>Включити коди операцій для бінарного представлення ☑️</li>
+	  <li>Генерувати нові intrinsic - інструкції для JIT-компілятора ☑️</li>
+	  <li>Забезпечити перехоплення виключень 🔜</li>
+	  <li>Використання транзакційної пам'яті  🔜</li>
+	</ul>
+    </section>
+    
+    <section class="slide">
+        <h2>Як обирався алгоритм пришвидшеного запису (1)</h2>
+        <br>
+	<br>
+        <ul>
+          <li>ChakraCore вже має реалізацію таких операцій для JavaScript.</li>
+	  <br>
+	  <li><b>Проблема</b> : немає підтримки обробки пасток OC (trap). </li>
+	</ul>
+    </section>
+
+    <section class="slide">
+        <h2>Як обирався алгоритм пришвидшеного запису (2)</h2>
+        <br>
+        <ul>
+          <li>Перевіряємо необхідні умови : чи вдосталь пам'яті, чи доступна зараз пам'ять, звідки ми хочемо прочитати.</li>
+	  <br>
+	  <li>Побайтово копіюємо в пам'ять призначення по вказівнику.</li>
+	  <br>
+	  <li>Якщо трапляється помилка, передаємо її обробнику віртуальної машини.</li>
+	</ul>
+    </section>
+
+    <section class="slide">
+        <h2>Як обирався алгоритм пришвидшеного запису (3)</h2>
+	<br>
+        <ul>
+	  <li>Оптимізація, яка дозволяє минати загрузку значень у кеш.</li>
+	  <br>
+          <li>Додаткова перевірка на кратність кількості байт для запису до 128/256/512.</li>
+	  <br>
+	  <li>Якщо так, то використовуємо інструкції <code><a href="https://www.felixcloutier.com/x86/movaps">movaps</a> / <a href="https://www.felixcloutier.com/x86/movntps">movntps</a></code>  із набору SSE (SIMD).</li>
+	</ul>
+    </section>
+
+    <section class="slide" style="padding-left: 50px;" >
+	<figure>
+            <img style="width: 900px; height: 700px;" src="pictures/a.jpg">
+        </figure>
+    </section>
+    
+    <section class="slide" id="see-more">
+        <h2 class="shout">
+            <img src="pictures/twitter.png" alt="Telegram logo" style="width: 200px; height: 150px;">
+            <div id="telegram">@FlyCreat1ve</div>
+        </h2>
+    </section>
+    
+    <section class="slide" id="see-more">
+        <h2 class="shout">
+          <p>Дякую за увагу!</p>
+	  <p>Питання?</p>
+	  
+        </h2>
+        <style>
+            #see-more h2 {
+                font-size: 72px
+            }
+
+            #see-more img {
+                width: 0.72em;
+                height: 0.72em;
+            }
+        </style>
+    </section>
+
+    <footer class="badge">
+        <a href="https://github.com/shower/shower">Fork me on GitHub</a>
+    </footer>
+
+    <div class="progress"></div>
+
+    <script src="shower/shower.min.js"></script>
+    <!-- Copyright © 2018 Alexander Syrotenko -->
+
+</body>
+</html>
