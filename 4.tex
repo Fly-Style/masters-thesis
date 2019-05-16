@@ -1,6 +1,26 @@
 \chapter{Experimental Testing}
 
-\section{Software setup}
-\section{Hardware setup}
+\section{Hardware and Software setup}
+
+Author used two devices for his investigation :
+\begin{enumerate}
+ \item Personal computer (PC) with Intel Core i5-7600 processor (Caby Lake architecure) with enabled hyperthreading and enabled SIMD support, 16 GB of HDDR4 HyperX RAM and 128 GB Kingston SSD.
+  PC is operated by Windows 10 OS. ChakraCore was compiled with \texttt{mvsc 2017} compiler using both Debug and Release configurations.
+
+\item Laptop MacBook Pro 2015 with Intel Core i5-4*** processor of Haswell series with enabled hyperthreading and SIMD support.
+  MacBook has 8 GB of DDR3 RAM and 128 GB Apple SSD.
+  It operates by MacOS 10.14.2. ChakraCore was compiled with clang 9.0 using test, debug and release builds.
+\end{enumerate}
+
 \section{Compile time results}
+
+Compile time result will be compared between 5 different builds on two different platforms : Mac and Windows.
+
+\begin{table}[]
+\begin{tabular}{lll}
+28 mins  & 22 mins & -      \\
+2.5 mins & 4 mins  & 4 mins
+\end{tabular}
+\end{table}
+
 \section{Run time tests and benchmarks}

@@ -1,11 +1,65 @@
-\chapter{WebAssembly Engines Overview}
+\chapter{WebAssembly Compilers and Engines Overview}
 
-\section{V8}
+As any other programming language ecosystem, WebAssembly has source-to-WAT or source-to-WASM compilers and IR interpreters (or runtimes).
+The most used source languages for WebAssembly are C/C++ and Rust, which are used for development of high-performant applications.
+Also JavaScript and TypeScript are popular for compiling to WebAssembly IR or binary code.
+This chapter contains short overview of the most efficient tools for WebAssembly compilation and execution.
 
-\section{SpiderMonkey}
+\section{Compilers}
 
-\section{JSCore}
+\subsection{emscripten}
 
-\section{ChakraCore}
+\texttt{emscripten} is the most popular and the most efficient LLVM to Web ahead-of-time compiler and debugger tools.
+It supports all languages which could be compiled to LLVM bitcode.
+
+Originally, it had only JavaScript as a compilation target language, but in version \texttt{1.39},
+\texttt{emscripten} develpers shipped new \texttt{binaryen} compiler infrastructure as part of \texttt{emscripten} tool.
+It allows fast, effective and easy compilation :
+\begin{itemize}
+ \item \texttt{binaryen} has a single C header, where whole \texttt{C API} is described. This header could be used from JavaScript.
+ \item \texttt{binaryen} designed as multicore tools for completely parallen code generation and optimization techniques.
+ \item as a rule, \texttt{binaryen} compiler make a lot of compilation passes for better optimization.
+   It uses both common and specific compilers optimization techniques as constant folding, loop fusion,
+   dead code elimination, experimental escape analysis and target code minification.
+ \item \texttt{binaryen} also includes WebAssembly interpreter and separate WebAssmbly IR optimizer. 
+\end{itemize}
+
+Nowadays (year 2019) \texttt{emscripten} compiler infrastructure is the most popular among C/C++/Swift developers.
+
+\subsection{Rust WebAssembly target}
+
+Rust compiler infrastructure supports Rust to WAT and Rust to WASM since version \texttt{1.30}.
+WAT and WASM are one of the backend output options.
+You can add the target by executing \texttt{rustup target add wasm32-unknown-unknown} in your terminal.
+Compilation of Rust program is possible by executing \texttt{cargo build --target wasm32-unknown-unknown --release}.
+
+Rust optimized compiler has big featureset and it is one of the most efficient compiler nowadays.
+
+\subsection{AssemblyScript}
+
+AssemblyScript is TypeScript-to-WASM compiler was written in TypeScript.
+It has its own compiler frontend and uses \texttt{binaryen} as a compiler backend. 
+
+\section {Runtimes}
+
+\subsection{Reference Interpreter}
+
+\subsection{JavaScript virtual machines}
+
+\subsubsection{V8}
+
+\subsubsection{SpiderMonkey}
+
+\subsubsection{JSCore}
+
+\subsubsection{ChakraCore}
+
+\subsection{Other runtimes}
+
+\subsubsection{WAVM}
+
+\subsubsection{wasmer}
+
+\subsubsection{TeaVM}
 
 \section{Analysis and Comparison}
