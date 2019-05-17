@@ -15,11 +15,12 @@ All these facts mean one thing - it’s profitable both for browser manufacturer
 WebAssembly is of the major result of mutual research and design of performant Web tools. WebAssembly was  was first announced 17th of June 2015, and the first demonstration was executing Angry Bots in three major browsers.
 The precursor technologies were asm.js from Mozilla and Google Native Client (PNaCl) and the initial implementation was based on the feature set of \texttt{asm.js}. \cite{Wiki_Wasm}
 
-WebAssembly (often shortened to Wasm) is a standard that defines a portable binary format and a corresponding assembly-like text format for executables. The main goal of the format is to enable high performance applications on web pages, but it is designed to be executed and integrated in other environments as well. \cite{Wiki_Wasm}
+WebAssembly (as a rule, this term is shortened to WASM) is a standard that defines a portable binary format and a corresponding assembly-like text format for executables. The main goal of the format is to enable high performance applications on web pages, 
+but it is designed to be executed and integrated in other environments as well, not only in Web-applications. \cite{Wiki_Wasm}
 
-\Large \textbf{Original memory management in WebAssembly}
+\textbf{Original memory management in WebAssembly.}
 
-\normalsize Sometimes software engineers want to copy or initialize big chunk of linear memory.
+Sometimes software engineers want to copy or initialize big chunk of linear memory.
 
 For this reason they are using \texttt{memset/memcpy} in C/C++ or \texttt{System.arraycopy()} in Java, generally called as \textbf{bulk memory operations}. 
 
@@ -72,7 +73,9 @@ Compilation result of this fucntion by \texttt{emscripten} tool to such piece of
  ))
 )
 \end{verbatim}
+
 \normalsize
+
 Compiled code contains \texttt{memcpy} and \texttt{memset} functions.
 They were imported from \texttt{env} module which \textbf{\textit{is linked}} with standart \texttt{libc} library, where those functions are defined and implemented.
 It would be better to use internal WebAssembly bulk operations instead of using \texttt{libc}'s memory operations. 
@@ -80,9 +83,23 @@ It would be better to use internal WebAssembly bulk operations instead of using 
 This is a key idea of further investigations : desiging and implementation of bulk memory operations intrinsics, which would be placed to a special \texttt{memory} module.
 
 
-\Large \textbf{Summary of Major Contributions}
+\textbf{Summary of Major Contributions.}
 
-\normalsize
+The major contributions of this thesis are:
+\begin{itemize}
+  \item Description of algorithms of bulk copy, move and initialization operations on WebAssembly memory.
+  \item Development of passive memory initialization algorithms.
+  \item Implementation of bulk operations algorithms.
+  \item Integrations of algorithms to a production virtual machine named ChakraCore.
+  \item Study and comparison of the performance of these algorithms compare to standard.
+\end{itemize}
 
-\indent \textbf{TO BE DEFINED LATER}
+The algorithms have been implemented in C++ and integrated to the ChakraCore engine.
+They can be used as comilation result of any compiled user's WebAssembly module.
+These algorithms are fully compatible with WebAssembly specification and bulk memory operations proposal.
 
+Chapter 1 provides introduction about WebAssembly as technology and its ancestors. 
+Chapter 2 describes the major WebAssembly compilers and runtimes.
+Сhapter 3 presents the developed algorithms for every bulk operation and their profitable usage. 
+The results of compilation, runtime and benchmarks tests are presented in Chapter 4.
+Appendix A contains an example of WebAssembly S-expressions.

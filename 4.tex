@@ -16,11 +16,130 @@ Author used two devices for his investigation :
 
 Compile time result will be compared between 5 different builds on two different platforms : Mac and Windows.
 
+\addcontentsline{lot}{table}{Compile-time measures}
 \begin{table}[]
-\begin{tabular}{lll}
-28 mins  & 22 mins & -      \\
-2.5 mins & 4 mins  & 4 mins
+\vspace{1.2cm}
+\hspace{4.5cm}
+\begin{tabular}{|l|l|l|l|}         \hline
+Build: & Debug  & Release & Test   \\ \hline
+MacOS: & 28 mins  & 22 mins & -    \\ \hline
+PC & 7 mins & 5.5 mins  & 6.5 mins \\ \hline
 \end{tabular}
 \end{table}
 
+\vspace{3cm}
+
 \section{Run time tests and benchmarks}
+
+Let's measure throughput of implemented algorithms : 
+
+\begin{enumerate}
+  
+\item First benchmark is measurement and comparison of throughput of our \texttt{memory.copy} operation using MacBook. 
+      It is copying one gigabyte of some memory filler with different ranges of data size and using different copy techniques.  
+      Data size varies from 32 bytes to 1 megabyte. 
+      Count of elements varies from 1024 (one chuck has 1 Mb) to 33 millions (chunk size is 32 bytes).
+      Before the main measurement benchmark also has warmup phase, where ~100 megabytes of memory copies to other destination.
+      The result is presented in table below. 
+
+\small
+\begin{table}[]
+\hspace{2cm}
+\addcontentsline{lot}{table}{Measurement of `memory.copy` operations and its rivals}
+\begin{tabular}{|l|l|l|l|l|l|} \hline
+
+ Size, count      & memory.copy & i64 x4 & i64 x2 & i32 x4 & i32 x2 \\ \hline
+ 32b, N=33554432  & 1.812       & 1.036  & 1.021  & 0.783  & 1.097  \\ \hline
+ 64b, N=16777216  & 3.459       & 1.670  & 1.580  & 1.068  & 1.733  \\ \hline
+ 128b, N=8388608  & 6.832       & 2.387  & 2.175  & 1.319  & 2.388  \\ \hline
+ 256b, N=4194304  & 13.724      & 3.013  & 2.675  & 1.434  & 2.731  \\ \hline
+ 512b, N=2097152  & 27.337      & 3.460  & 2.781  & 1.566  & 3.150  \\ \hline
+ 1.0Kb,N=1048576  & 55.630      & 2.888  & 2.532  & 1.277  & 2.802  \\ \hline
+ 2.0Kib, N=524288 & 111.520     & 3.798  & 3.191  & 1.390  & 3.629  \\ \hline
+ 4.0Kib, N=262144 & 223.065     & 3.858  & 3.343  & 1.334  & 3.606  \\ \hline
+ 8.0Kib, N=131072 & 445.831     & 3.966  & 3.280  & 1.485  & 3.697  \\ \hline
+ 16.0Kib, N=65536 & 884.956     & 4.006  & 2.806  & 1.658  & 2.705  \\ \hline
+ 32.0Kib, N=32768 & 1602.564    & 4.106  & 3.408  & 1.696  & 3.131  \\ \hline
+ 64.0Kib, N=16384 & 1795.975    & 2.958  & 2.711  & 1.677  & 3.719  \\ \hline
+ 128.0Kib, N=8192 & 1235.602    & 4.038  & 3.412  & 1.711  & 3.806  \\ \hline
+ 256.0Kib, N=4096 & 1333.333    & 4.105  & 3.423  & 1.665  & 3.166  \\ \hline
+ 512.0Kib, N=2048 & 277.778     & 3.078  & 2.927  & 1.272  & 2.842  \\ \hline
+ 1.0Mib, N=1024   & 344 .759    & 3.253  & 3.181  & 1.557  & 3.504  \\ \hline
+
+\end{tabular}
+\end{table}
+
+\normalsize
+
+\vspace{3cm}
+
+\item Second benchmark is measurement and comparison of throughput of our \texttt{memory.fill} operation using MacBook. 
+      It is storing one gigabyte of random values with different ranges of data size.  
+      Data size varies from 32 bytes to 256 kbytes. 256 Kb) to 33 millions (chunk size is 32 bytes).
+      Before the main measurement benchmark also has warmup phase, where ~100 megabytes of memory stores with random numeric value.
+      The result is presented in table below.
+\small
+\begin{table}[]
+\vspace{1cm}
+\hspace{3cm}
+\addcontentsline{lot}{table}{Measurement of `memory.fill` operations and its rivals}
+\begin{tabular}{|l|l|l|l|} \hline
+
+  Size, count       & memory.fill &   i64   &   f64   \\ \hline
+  32b, N=33554432   & 337.541     & 231.047 & 202.857 \\ \hline
+  64b, N=16777216   & 344.747     & 219.208 & 195.645 \\ \hline
+  128b, N=8388608   & 309.110     & 236.186 & 200.928 \\ \hline
+  256b, N=4194304   & 303.934     & 255.719 & 233.854 \\ \hline
+  512b, N=2097152   & 316.871     & 235.361 & 209.014 \\ \hline
+  1.0Kib, N=1048576 & 325.176     & 215.470 & 198.963 \\ \hline
+  2.0Kib, N=524288  & 328.753     & 220.915 & 181.198 \\ \hline
+  4.0Kib, N=262144  & 307.274     & 210.355 & 180.818 \\ \hline
+  8.0Kib, N=131072  & 309.703     & 199.489 & 172.027 \\ \hline
+  16.0Kib, N=65536  & 308.377     & 194.998 & 171.126 \\ \hline
+  32.0Kib, N=32768  & 300.511     & 200.759 & 147.658 \\ \hline
+  64.0Kib, N=16384  & 302.202     & 168.391 & 147.151 \\ \hline
+  128.0Kib, N=8192  & 297.917     & 190.240 & 154.286 \\ \hline
+  256.0Kib, N=4096  & 313.127     & 274.415 & 161.437 \\ \hline
+\end{tabular}
+\end{table}
+
+\normalsize
+
+\vspace{2cm}
+
+\item Third benchmark is measurement and comparison of throughput of our \texttt{memory.init} operation using MacBook. 
+      It is storing one gigabyte of random values with different ranges of data size during the passive segment initializing.  
+      Data size varies from 32 bytes to 256 kbytes. 256 Kb) to 33 millions (chunk size is 32 bytes).
+      Before the main measurement benchmark also has warmup phase, where ~100 megabytes memory is initializing with random numeric value.
+      The result is presented in table below.
+\small
+\begin{table}[]
+\hspace{3cm}
+\addcontentsline{lot}{table}{Measurement of `memory.init` operations and its rivals}
+\begin{tabular}{|l|l|l|l|} \hline
+
+  Size, count       & memory.init &   i64   &   f64   \\ \hline
+  32b, N=33554432   &   353.3     &  217.6  &  212.2   \\ \hline
+  64b, N=16777216   &   313.1     &  211.1  &  203.2   \\ \hline
+  128b, N=8388608   &   317.8     &  214.4  &  206.6   \\ \hline
+  256b, N=4194304   &   320.0     &  221.2  &  232.2   \\ \hline
+  512b, N=2097152   &   476.7     &  231.5  &  199.3   \\ \hline
+  1.0Kib, N=1048576 &   407.5     &  355.8  &  274.9   \\ \hline
+  2.0Kib, N=524288  &   365.9     &  229.1  &  199.4   \\ \hline
+  4.0Kib, N=262144  &   581.2     &  317.7  &  249.2   \\ \hline
+  8.0Kib, N=131072  &   337.0     &  217.6  &  210.6   \\ \hline
+  16.0Kib, N=65536  &   313.3     &  249.9  &  286.3   \\ \hline
+  32.0Kib, N=32768  &   304.0     &  230.7  &  257.7   \\ \hline
+  64.0Kib, N=16384  &   411.2     &  212.8  &  233.0   \\ \hline
+  128.0Kib, N=8192  &   308.6     &  214.7  &  207.8   \\ \hline
+  256.0Kib, N=4096  &   320.6     &  204.6  &  192.5   \\ \hline
+  512.0Kib, N=2048  &   282.7     &  163.9  &  155.1   \\ \hline
+
+\end{tabular}
+\end{table}
+
+\normalsize
+
+\end{enumerate}
+
+\section{Conclusions}
